@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:logger/logger.dart';
 
 void main() {
   runApp(const MyApp());
@@ -28,6 +30,7 @@ class MyApp extends StatelessWidget {
         //
         // This works for code too, not just values: Most code changes can be
         // tested with just a hot reload.
+        fontFamily: "Lonely",
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.amber),
         useMaterial3: true,
       ),
@@ -73,14 +76,19 @@ class _MyHomePageState extends State<MyHomePage> {
       _counter = 0;
     });
   }
+
   void _subtractCounter() {
-  setState(() {
-    _counter--;
-  });
-}
+    setState(() {
+      _counter--;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    var logger = Logger();
+
+    logger.d("Logger is working!");
+    String svg = "assets/icons/8664845_face_grin_tongue_icon.svg";
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -116,6 +124,7 @@ class _MyHomePageState extends State<MyHomePage> {
           // wireframe for each widget.
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            SvgPicture.asset(svg, semanticsLabel: 'Acme Logo', width: 80),
             const Text(
               'Pulsaciones:',
             ),
@@ -127,15 +136,9 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       persistentFooterButtons: <Widget>[
+        TextButton(onPressed: _incrementCounter, child: const Icon(Icons.add)),
+        TextButton(onPressed: _resetCounter, child: const Icon(Icons.refresh)),
         TextButton(
-          onPressed: _incrementCounter,
-          child: const Icon(Icons.add)
-        ),
-        TextButton(
-          onPressed: _resetCounter,
-          child: const Icon(Icons.refresh)
-        ),
-         TextButton(
           onPressed: _subtractCounter,
           child: const Icon(Icons.exposure_minus_1),
         )
