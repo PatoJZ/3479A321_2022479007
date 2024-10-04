@@ -7,10 +7,11 @@ class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
 
   final String title;
+
   @override
   // ignore: no_logic_in_create_state
   State<MyHomePage> createState() {
-    Logger().d("createState: estado creado.");
+    Logger().d("createState: Estado creado.");
     return _MyHomePageState();
   }
 }
@@ -58,21 +59,21 @@ class _MyHomePageState extends State<MyHomePage> {
   void _incrementCounter() {
     setState(() {
       _counter++;
-      logger.d("setState: Contador incrementado a $_counter.");
+      logger.d("setState: Contador incrementado a $_counter. Mounted: $mounted");
     });
   }
 
   void _resetCounter() {
     setState(() {
       _counter = 0;
-      logger.d("setState: Contador reiniciado a $_counter.");
+      logger.d("setState: Contador reiniciado a $_counter. Mounted: $mounted");
     });
   }
 
   void _subtractCounter() {
     setState(() {
       _counter--;
-      logger.d("setState: Contador disminuido a $_counter.");
+      logger.d("setState: Contador disminuido a $_counter. Mounted: $mounted");
     });
   }
 
@@ -104,7 +105,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    logger.d("build: Construyendo la interfaz de usuario.");
+    logger.d("build: Construyendo la interfaz de usuario. Mounted: $mounted");
 
     return Scaffold(
       appBar: AppBar(
@@ -191,6 +192,23 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        fontFamily: "Lonely",
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.amber),
+        useMaterial3: true,
+      ),
+      home: const MyHomePage(title: 'Demo Dispositivos moviles'),
     );
   }
 }
