@@ -32,10 +32,10 @@ class _MyHomePageState extends State<MyHomePage> {
       _counter--;
     });
   }
+
   String _iconText(int counter) {
     String default_ = "sin ganador";
-    String win =
-        "has ganado";
+    String win = "has ganado";
     String loss = "has perdido";
     if (counter == 5) {
       return loss;
@@ -127,7 +127,6 @@ class _MyHomePageState extends State<MyHomePage> {
                               child: const Icon(Icons.exposure_minus_1),
                             ),
                             const SizedBox(width: 8),
-                           
                           ],
                         ),
                       ),
@@ -136,17 +135,17 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
               Row(
-                 mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => const Detail()),
-                          );
-                        },
-                        child: const Icon(Icons.arrow_forward_outlined),
-                      ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const Detail()),
+                      );
+                    },
+                    child: const Icon(Icons.arrow_forward_outlined),
+                  ),
                 ],
               ),
             ],
