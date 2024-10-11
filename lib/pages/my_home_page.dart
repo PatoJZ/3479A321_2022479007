@@ -83,7 +83,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             ListTile(
               leading: const Icon(Icons.home),
-              title: const Text('Home'),
+              title: const Text('Contador'),
               onTap: () {
                 Navigator.pop(context);
               },
@@ -115,7 +115,7 @@ class _MyHomePageState extends State<MyHomePage> {
               title: const Text('Auditoría'),
               onTap: () {
                 context.read<AppData>().actions.add("Acceso a la pantalla Auditoría");
-                Navigator.push(
+                Navigator.push( 
                   context,
                   MaterialPageRoute(builder: (context) => const AuditPage()),
                 );
