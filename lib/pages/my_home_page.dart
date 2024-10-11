@@ -165,17 +165,17 @@ class _MyHomePageState extends State<MyHomePage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
                             TextButton(
-                              onPressed: appData.incrementCounter,
+                               onPressed: context.read<AppData>().incrementCounter,
                               child: const Icon(Icons.add),
                             ),
                             const SizedBox(width: 8),
                             TextButton(
-                              onPressed: appData.resetCounter,
+                               onPressed: context.read<AppData>().resetCounter,
                               child: const Icon(Icons.refresh),
                             ),
                             const SizedBox(width: 8),
                             TextButton(
-                              onPressed: appData.subtractCounter,
+                             onPressed: context.read<AppData>().subtractCounter,
                               child: const Icon(Icons.exposure_minus_1),
                             ),
                           ],

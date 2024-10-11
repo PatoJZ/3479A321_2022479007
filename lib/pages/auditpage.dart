@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter/foundation.dart';
+
 
 class AppData extends ChangeNotifier {
   int _counter = 0;
@@ -33,7 +33,7 @@ class AuditPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final actions = context.watch<AppData>().actions; // Acceso a la lista de acciones desde el Provider
+    final actions = context.watch<AppData>().actions; 
 
     return Scaffold(
       appBar: AppBar(
