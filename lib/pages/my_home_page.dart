@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:laboratorio1/pages/auditpage.dart';
 import 'package:logger/logger.dart';
+import 'package:provider/provider.dart';
 import 'package:laboratorio1/pages/detail.dart';
+import 'package:laboratorio1/pages/about.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -17,7 +20,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
   var logger = Logger();
 
   @override
@@ -56,55 +58,10 @@ class _MyHomePageState extends State<MyHomePage> {
     super.reassemble();
   }
 
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-      logger.d("setState: Contador incrementado a $_counter. Mounted: $mounted");
-    });
-  }
-
-  void _resetCounter() {
-    setState(() {
-      _counter = 0;
-      logger.d("setState: Contador reiniciado a $_counter. Mounted: $mounted");
-    });
-  }
-
-  void _subtractCounter() {
-    setState(() {
-      _counter--;
-      logger.d("setState: Contador disminuido a $_counter. Mounted: $mounted");
-    });
-  }
-
-  String _iconText(int counter) {
-    String default_ = "sin ganador";
-    String win = "has ganado";
-    String loss = "has perdido";
-    if (counter == 5) {
-      return loss;
-    } else if (counter == 10) {
-      return win;
-    } else {
-      return default_;
-    }
-  }
-
-  String _icon(int counter) {
-    String default_ = "assets/icons/8664845_face_grin_tongue_icon.svg";
-    String win = "assets/icons/7727475_gold_cup_award_success_first_victory_icon.svg";
-    String loss = "assets/icons/7631427_status_error_alert_alarm_icon.svg";
-    if (counter == 5) {
-      return loss;
-    } else if (counter == 10) {
-      return win;
-    } else {
-      return default_;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
+    var appData = context.watch<AppData>();
+
     logger.d("build: Construyendo la interfaz de usuario. Mounted: $mounted");
 
     return Scaffold(
@@ -112,6 +69,60 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text("Home"),
         centerTitle: true,
+      ),
+      // Aquí va el Drawer
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            const DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.blue,
+              ),
+              child: Text('Menú de Navegación'),
+            ),
+            ListTile(
+              leading: const Icon(Icons.home),
+              title: const Text('Home'),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.info),
+              title: const Text('Detalle'),
+              onTap: () {
+                context.read<AppData>().actions.add("Acceso a la pantalla Detalle");
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const Detail()),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.info_outline),
+              title: const Text('Sobre'),
+              onTap: () {
+                context.read<AppData>().actions.add("Acceso a la pantalla Sobre");
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const About()),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.history),
+              title: const Text('Auditoría'),
+              onTap: () {
+                context.read<AppData>().actions.add("Acceso a la pantalla Auditoría");
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const AuditPage()),
+                );
+              },
+            ),
+          ],
+        ),
       ),
       body: Center(
         child: Padding(
@@ -128,13 +139,13 @@ class _MyHomePageState extends State<MyHomePage> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           SvgPicture.asset(
-                            _icon(_counter),
-                            semanticsLabel: 'Acme Logo',
+                            "assets/icons/8664845_face_grin_tongue_icon.svg",
+                            semanticsLabel: 'Icon',
                             width: 80,
                           ),
                           const Text('Pulsaciones:'),
                           Text(
-                            '$_counter',
+                            '${appData.counter}',  // Contador usando el Provider
                             style: Theme.of(context).textTheme.headlineMedium,
                           ),
                         ],
@@ -143,7 +154,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            _iconText(_counter),
+                            appData.counter == 10 ? 'Has ganado' : appData.counter == 5 ? 'Has perdido' : 'Sin ganador',
                             style: Theme.of(context).textTheme.headlineMedium,
                           ),
                         ],
@@ -154,17 +165,17 @@ class _MyHomePageState extends State<MyHomePage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
                             TextButton(
-                              onPressed: _incrementCounter,
+                              onPressed: appData.incrementCounter,
                               child: const Icon(Icons.add),
                             ),
                             const SizedBox(width: 8),
                             TextButton(
-                              onPressed: _resetCounter,
+                              onPressed: appData.resetCounter,
                               child: const Icon(Icons.refresh),
                             ),
                             const SizedBox(width: 8),
                             TextButton(
-                              onPressed: _subtractCounter,
+                              onPressed: appData.subtractCounter,
                               child: const Icon(Icons.exposure_minus_1),
                             ),
                           ],
@@ -174,41 +185,10 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const Detail()),
-                      );
-                    },
-                    child: const Icon(Icons.arrow_forward_outlined),
-                  ),
-                ],
-              ),
             ],
           ),
         ),
       ),
-    );
-  }
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        fontFamily: "Lonely",
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.amber),
-        useMaterial3: true,
-      ),
-      home: const MyHomePage(title: 'Demo Dispositivos moviles'),
     );
   }
 }
