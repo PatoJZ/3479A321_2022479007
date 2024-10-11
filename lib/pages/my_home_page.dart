@@ -9,27 +9,71 @@ class MyHomePage extends StatefulWidget {
   final String title;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  // ignore: no_logic_in_create_state
+  State<MyHomePage> createState() {
+    Logger().d("createState: Estado creado.");
+    return _MyHomePageState();
+  }
 }
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  var logger = Logger();
+
+  @override
+  void initState() {
+    super.initState();
+    logger.d("initState: El widget fue incluido en el árbol.");
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    logger.d("didChangeDependencies: Las dependencias cambiaron.");
+  }
+
+  @override
+  void didUpdateWidget(covariant MyHomePage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    logger.d("didUpdateWidget: El widget ha sido actualizado.");
+  }
+
+  @override
+  void deactivate() {
+    logger.d("deactivate: El widget fue removido del árbol.");
+    super.deactivate();
+  }
+
+  @override
+  void dispose() {
+    logger.d("dispose: El widget ha sido eliminado permanentemente.");
+    super.dispose();
+  }
+
+  @override
+  void reassemble() {
+    logger.d("reassemble: Hot reload ha sido ejecutado.");
+    super.reassemble();
+  }
 
   void _incrementCounter() {
     setState(() {
       _counter++;
+      logger.d("setState: Contador incrementado a $_counter. Mounted: $mounted");
     });
   }
 
   void _resetCounter() {
     setState(() {
       _counter = 0;
+      logger.d("setState: Contador reiniciado a $_counter. Mounted: $mounted");
     });
   }
 
   void _subtractCounter() {
     setState(() {
       _counter--;
+      logger.d("setState: Contador disminuido a $_counter. Mounted: $mounted");
     });
   }
 
@@ -48,8 +92,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   String _icon(int counter) {
     String default_ = "assets/icons/8664845_face_grin_tongue_icon.svg";
-    String win =
-        "assets/icons/7727475_gold cup_award_success_first_victory_icon.svg";
+    String win = "assets/icons/7727475_gold_cup_award_success_first_victory_icon.svg";
     String loss = "assets/icons/7631427_status_error_alert_alarm_icon.svg";
     if (counter == 5) {
       return loss;
@@ -62,9 +105,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    var logger = Logger();
-
-    logger.d("Logger is working!");
+    logger.d("build: Construyendo la interfaz de usuario. Mounted: $mounted");
 
     return Scaffold(
       appBar: AppBar(
@@ -126,7 +167,6 @@ class _MyHomePageState extends State<MyHomePage> {
                               onPressed: _subtractCounter,
                               child: const Icon(Icons.exposure_minus_1),
                             ),
-                            const SizedBox(width: 8),
                           ],
                         ),
                       ),
@@ -152,6 +192,23 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        fontFamily: "Lonely",
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.amber),
+        useMaterial3: true,
+      ),
+      home: const MyHomePage(title: 'Demo Dispositivos moviles'),
     );
   }
 }
