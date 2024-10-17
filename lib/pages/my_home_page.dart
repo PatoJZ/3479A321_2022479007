@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:laboratorio1/pages/appdata.dart';
 import 'package:laboratorio1/pages/auditpage.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:laboratorio1/pages/detail.dart';
 import 'package:laboratorio1/pages/about.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -21,10 +23,31 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   var logger = Logger();
+  int _counter = 0;
+
+  /// Load the initial counter value from persistent storage on start,
+  /// or fallback to 0 if it doesn't exist.
+  Future<void> _loadCounter() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _counter = prefs.getInt('counter') ?? 0;
+    });
+  }
+
+  /// After a click, increment the counter state and
+  /// asynchronously save it to persistent storage.
+  Future<void> _incrementCounter() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _counter = (prefs.getInt('counter') ?? 0) + 1;
+      prefs.setInt('counter', _counter);
+    });
+  }
 
   @override
   void initState() {
     super.initState();
+    _loadCounter();
     logger.d("initState: El widget fue incluido en el árbol.");
   }
 
@@ -92,7 +115,10 @@ class _MyHomePageState extends State<MyHomePage> {
               leading: const Icon(Icons.info),
               title: const Text('Detalle'),
               onTap: () {
-                context.read<AppData>().actions.add("Acceso a la pantalla Detalle");
+                context
+                    .read<AppData>()
+                    .actions
+                    .add("Acceso a la pantalla Detalle");
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const Detail()),
@@ -103,7 +129,10 @@ class _MyHomePageState extends State<MyHomePage> {
               leading: const Icon(Icons.info_outline),
               title: const Text('Sobre'),
               onTap: () {
-                context.read<AppData>().actions.add("Acceso a la pantalla Sobre");
+                context
+                    .read<AppData>()
+                    .actions
+                    .add("Acceso a la pantalla Sobre");
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const About()),
@@ -114,8 +143,11 @@ class _MyHomePageState extends State<MyHomePage> {
               leading: const Icon(Icons.history),
               title: const Text('Auditoría'),
               onTap: () {
-                context.read<AppData>().actions.add("Acceso a la pantalla Auditoría");
-                Navigator.push( 
+                context
+                    .read<AppData>()
+                    .actions
+                    .add("Acceso a la pantalla Auditoría");
+                Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const AuditPage()),
                 );
@@ -145,7 +177,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           ),
                           const Text('Pulsaciones:'),
                           Text(
-                            '${appData.counter}',  // Contador usando el Provider
+                            '$_counter', // Contador usando el Provider
                             style: Theme.of(context).textTheme.headlineMedium,
                           ),
                         ],
@@ -154,7 +186,11 @@ class _MyHomePageState extends State<MyHomePage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            appData.counter == 10 ? 'Has ganado' : appData.counter == 5 ? 'Has perdido' : 'Sin ganador',
+                            appData.counter == 10
+                                ? 'Has ganado'
+                                : appData.counter == 5
+                                    ? 'Has perdido'
+                                    : 'Sin ganador',
                             style: Theme.of(context).textTheme.headlineMedium,
                           ),
                         ],
@@ -165,17 +201,18 @@ class _MyHomePageState extends State<MyHomePage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
                             TextButton(
-                               onPressed: context.read<AppData>().incrementCounter,
+                              onPressed: _incrementCounter,
                               child: const Icon(Icons.add),
                             ),
                             const SizedBox(width: 8),
                             TextButton(
-                               onPressed: context.read<AppData>().resetCounter,
+                              onPressed: context.read<AppData>().resetCounter,
                               child: const Icon(Icons.refresh),
                             ),
                             const SizedBox(width: 8),
                             TextButton(
-                             onPressed: context.read<AppData>().subtractCounter,
+                              onPressed:
+                                  context.read<AppData>().subtractCounter,
                               child: const Icon(Icons.exposure_minus_1),
                             ),
                           ],

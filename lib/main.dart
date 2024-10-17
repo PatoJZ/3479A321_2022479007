@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:laboratorio1/pages/auditpage.dart';
 import 'package:provider/provider.dart';
 
+import 'pages/appdata.dart';
 import 'pages/my_home_page.dart';
 
 void main() {
