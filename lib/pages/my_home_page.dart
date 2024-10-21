@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:laboratorio1/pages/appdata.dart';
+import 'package:laboratorio1/pages/auditoria.dart';
 import 'package:laboratorio1/pages/auditpage.dart';
+import 'package:laboratorio1/pages/preferencesScreen.dart';
+import 'package:laboratorio1/utils/DatabaseHelper.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:laboratorio1/pages/detail.dart';
@@ -22,8 +25,9 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  var logger = Logger();
   int _counter = 0;
+  String _userName = '';
+  var logger = Logger();
 
   /// Load the initial counter value from persistent storage on start,
   /// or fallback to 0 if it doesn't exist.
@@ -32,6 +36,25 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       _counter = prefs.getInt('counter') ?? 0;
     });
+  }
+
+  Future<void> _loadPreferences() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _userName = prefs.getString('userName') ?? 'Invitado';
+      _counter = prefs.getInt('counter') ?? 0;
+    });
+      logger.d("Preferencias cargadas. Usuario: $_userName, Contador: $_counter");
+  }
+  Future<void> _savePreferences() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    setState((){
+
+    prefs.setString('userName', _userName);
+    prefs.setInt('counter', _counter);
+    });
+    
   }
 
   /// After a click, increment the counter state and
@@ -47,7 +70,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-    _loadCounter();
+    _loadPreferences();
     logger.d("initState: El widget fue incluido en el árbol.");
   }
 
@@ -149,10 +172,27 @@ class _MyHomePageState extends State<MyHomePage> {
                     .add("Acceso a la pantalla Auditoría");
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const AuditPage()),
+                  MaterialPageRoute(builder: (context) => AuditoriaScreen()),
                 );
               },
             ),
+            ListTile(
+              leading: const Icon(Icons.settings),
+              title: const Text('Preferencia'),
+              onTap: () {
+                context
+                    .read<AppData>()
+                    .actions
+                    .add("Acceso a la pantalla preferencia");
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const PreferencesScreen()),
+                ).then((_) {
+                 _loadPreferences();// Recargar preferencias al regresar de la pantalla de preferencias
+                });
+              },
+            )
           ],
         ),
       ),
@@ -167,6 +207,10 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
+                      Text(
+                        'Hola $_userName', // Mensaje de bienvenida con nombre de usuario
+                        style: const TextStyle(fontSize: 24),
+                      ),
                       Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -175,9 +219,9 @@ class _MyHomePageState extends State<MyHomePage> {
                             semanticsLabel: 'Icon',
                             width: 80,
                           ),
-                          const Text('Pulsaciones:'),
+                          const Text('Contador:'),
                           Text(
-                            '$_counter', // Contador usando el Provider
+                            '$_counter',
                             style: Theme.of(context).textTheme.headlineMedium,
                           ),
                         ],

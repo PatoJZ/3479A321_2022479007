@@ -28,15 +28,6 @@ class AppData extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> _loadPreferences() async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _userName = prefs.getString('userName') ?? '';
-      _counter = prefs.getInt('counter') ?? 0;
-      print('Counter value $_counter is loaded');
-      print('Username value $_userName is loaded');
-    });
-  }
 }
 
 void setState(Null Function() param0) {}
